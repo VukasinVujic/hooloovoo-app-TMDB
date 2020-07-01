@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { HomeScreen } from "./src/screens";
+import { HomeScreen, MovieDetailsScreen } from "./src/screens";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +14,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
