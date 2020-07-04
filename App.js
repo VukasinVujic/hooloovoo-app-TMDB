@@ -7,6 +7,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { HomeScreen, MovieDetailsScreen } from "./src/screens";
 
+// import { StoreState } from "./src/store/StoreState";
+
 const Stack = createStackNavigator();
 
 export default function App() {
