@@ -6,71 +6,102 @@ import {
   StyleSheet,
   TouchableHighlight,
   Image,
+  ActivityIndicator,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
+import { observer } from "mobx-react-lite";
 
 import { SCREENS } from "../constants";
 import { moviesApi } from "../api";
+import { useStore } from "../store";
 
-export const HomeScreen = () => {
+export const HomeScreen = observer(() => {
   const { navigate } = useNavigation();
-  const [moviesState, setMoviesState] = useState([]);
+  const { moviesStore } = useStore();
+  const [isFetching, setIsFetching] = useState(false);
+
+  const fetchMovies = () => {
+    setIsFetching(true);
+
+    moviesApi
+      .fetchPopularMovies()
+      .then((response) => {
+        console.log("Adding movies to store", response);
+        moviesStore.addMovies(response.results);
+        console.log("Added movies");
+      })
+      .catch((error) => {
+        console.log(`[ERROR] ${error}`);
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  };
 
   useEffect(() => {
-    moviesApi.fetchPopularMovies().then((movies) => {
-      console.log("Got movies: ", movies);
-      setMoviesState(movies.results);
-    });
+    fetchMovies();
+    console.log("STORE:", moviesStore);
   }, []);
 
   return (
     <View style={styles.bigContainer}>
-      <TouchableOpacity
-        onPress={() => navigate(SCREENS.MOVIE_DETAILS)}
-        style={styles.singleItem}
-      >
+      {isFetching ? (
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <TouchableHighlight
-            style={{ margin: 20 }}
-            onPress={() => {
-              console.log("Just press settings");
+          <ActivityIndicator size={64} />
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => navigate(SCREENS.MOVIE_DETAILS)}
+          style={styles.singleItem}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
             }}
           >
-            <Image
-              style={{
-                width: 40,
-                height: 40,
-                alignSelf: "flex-end",
+            <TouchableHighlight
+              style={{ margin: 20 }}
+              onPress={() => {
+                console.log("Just press settings");
               }}
-              source={require("../../public/pictures/setting.png")}
-            />
-          </TouchableHighlight>
-        </View>
+            >
+              <Image
+                style={{
+                  width: 40,
+                  height: 40,
+                  alignSelf: "flex-end",
+                }}
+                source={require("../../public/pictures/setting.png")}
+              />
+            </TouchableHighlight>
+          </View>
 
-        <>
-          {moviesState.length > 1 &&
-            moviesState.map((movie) => {
-              console.log("REndering a movie");
-              return (
-                <Text style={{ color: "#eee" }}>{movie.original_title}</Text>
-              );
-            })}
-        </>
+          <View>
+            {moviesStore.moviesList.map((movie, index) => (
+              <Text key={index} style={{ color: "#eee" }}>
+                {movie.original_title}
+              </Text>
+            ))}
+          </View>
 
-        {/* <Text style={{ color: "#eee" }}>Movie Details</Text> */}
-        <View style={styles.outerCircle}>
-          <View style={styles.innerCircle} />
-        </View>
-      </TouchableOpacity>
+          {/* <Text style={{ color: "#eee" }}>Movie Details</Text> */}
+          <View style={styles.outerCircle}>
+            <View style={styles.innerCircle} />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   bigContainer: {

@@ -1,26 +1,26 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { HomeScreen, MovieDetailsScreen } from "./src/screens";
-
-// import { StoreState } from "./src/store/StoreState";
+import { rootStore, RootStoreContext } from "./src/store";
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RootStoreContext.Provider value={rootStore}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RootStoreContext.Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -30,3 +30,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;

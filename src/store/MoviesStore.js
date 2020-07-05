@@ -1,17 +1,16 @@
-import React, { useEffect } from "react";
-// import axios from "axios";
+import { observable, action, decorate } from "mobx";
 
-export const MoviesStore = (props) => {
-  const fetchList = async () => {
-    const response = await axios.get(
-      "https://api.themoviedb.org/3/movie/popular?api_key=a7591b103e58fc4674393468dd6a570b&language=en-US&page=1"
-    );
-    console.log(response);
+class MoviesStore {
+  moviesList = [];
+
+  addMovies = (newMovies) => {
+    this.moviesList = this.moviesList.concat(newMovies);
   };
+}
 
-  useEffect(() => {
-    fetchList(), [];
-  });
-};
+decorate(MoviesStore, {
+  moviesList: observable,
+  addMovies: action,
+});
 
 export default MoviesStore;
