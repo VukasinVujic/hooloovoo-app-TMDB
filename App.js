@@ -14,7 +14,11 @@ const App = () => {
     <RootStoreContext.Provider value={rootStore}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
