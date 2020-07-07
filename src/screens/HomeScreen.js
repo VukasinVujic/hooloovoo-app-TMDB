@@ -40,7 +40,7 @@ export const HomeScreen = observer(() => {
         name={item.original_title}
         date={item.release_date}
         posterPath={item.poster_path}
-        rating={item.vote_count}
+        rating={item.vote_average}
       />
     );
   };

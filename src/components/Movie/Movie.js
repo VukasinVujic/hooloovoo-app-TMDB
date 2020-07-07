@@ -18,6 +18,7 @@ const Movie = (props) => {
   const { id, name, date, posterPath, rating } = props;
   const containerHeight = Dimensions.get("window").height - 50;
   const posterAbsolute = `${API.POSTER_BASE}${posterPath}`;
+  // console.log(rating);
 
   return (
     <View
@@ -65,7 +66,7 @@ const Movie = (props) => {
 
         <View style={styles.outerCircle}>
           <View style={styles.innerCircle}>
-            <Text>{rating}</Text>
+            <Text>{`${rating * 10}%`}</Text>
           </View>
         </View>
       </TouchableOpacity>

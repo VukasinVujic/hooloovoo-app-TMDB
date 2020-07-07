@@ -1,9 +1,19 @@
-import React, { useRef, useEffect } from "react";
-import { View, Text, Dimensions, ScrollView, FlatList } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  ScrollView,
+  FlatList,
+  Image,
+  Button,
+} from "react-native";
 
 import { observer } from "mobx-react-lite";
 
 import { useStore } from "../store";
+import { styles } from "../components/Movie/Movie.style";
+import { moviesApi } from "../api";
 
 const MovieDetailScreen = observer(({ route, navigation }) => {
   const screenWidth = Dimensions.get("window").width;
@@ -14,17 +24,38 @@ const MovieDetailScreen = observer(({ route, navigation }) => {
   const currentMovieIdx = moviesStore.moviesList.findIndex(
     (movie) => movie.id === movieId
   );
-
   const flatListRef = useRef(null);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const fetchGenreTagline = (movieId) => {
+    setIsFetching(true);
+
+    moviesApi
+      .fetchGenTag(movieId)
+      .then((response) => {
+        // console.log("Adding details to the store", response);
+        moviesStore.addGenreTag(response.genres);
+      })
+      .catch((error) => {
+        console.log(`[ERROR] ${error}`);
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  };
 
   useEffect(() => {
     flatListRef.current.scrollToIndex({
       animated: true,
       index: currentMovieIdx,
     });
+    fetchGenreTagline(movieId);
   }, []);
 
   const renderMovie = ({ item }) => {
+    {
+      console.log(item.id);
+    }
     return (
       <View
         style={{
@@ -33,10 +64,55 @@ const MovieDetailScreen = observer(({ route, navigation }) => {
           height: screenHeight,
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#003148",
+          color: "#ffffff",
         }}
       >
-        <Text>{item.original_title}</Text>
-        <Text>{item.vote_count}</Text>
+        <View style={{ marginBottom: 30 }}>
+          <Text style={{ color: "white", fontSize: 20 }}>
+            {item.original_title}
+            {`(${item.release_date.slice(0, 4)})`}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            // flex: 1,
+            marginBottom: 30,
+            // justifyContent: "flex-start",
+          }}
+        >
+          <View style={styles.outerCircle}>
+            <View style={styles.innerCircle}>
+              <Text>{`${item.vote_average * 10}%`}</Text>
+            </View>
+          </View>
+          <View style={{ flex: 0.1 }} />
+          <Text style={{ color: "white", fontSize: 20 }}>Users{"\n"}Grade</Text>
+          <View style={{ flex: 0.1 }} />
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+            }}
+            source={require("../../public/pictures/list2.png")}
+          />
+          <View style={{ flex: 0.1 }} />
+
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+            }}
+            source={require("../../public/pictures/like2.png")}
+          />
+          <View style={{ flex: 0.1 }} />
+        </View>
+        <Text style={{ color: "white", fontSize: 15 }}>Description</Text>
+
+        <View style={{ marginVertical: 15, marginHorizontal: 15 }}>
+          <Text style={{ color: "white" }}>{item.overview}</Text>
+        </View>
       </View>
     );
   };

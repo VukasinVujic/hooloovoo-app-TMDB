@@ -4,5 +4,7 @@ export const API = {
   POSTER_BASE: "https://image.tmdb.org/t/p/w185",
   MOVIES: {
     TOP: "/movie/popular?api_key={APIKEY}&language=en-US&page=1",
+    DETAIL:
+      "/movie/{MOVIEID}?api_key=a7591b103e58fc4674393468dd6a570b&language=en-US",
   },
 };
