@@ -18,6 +18,7 @@ class MoviesStore {
 decorate(MoviesStore, {
   moviesList: observable,
   addMovies: action,
+  addGenreTag: action,
 });
 
 export default MoviesStore;

@@ -1,13 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Dimensions,
-  ScrollView,
-  FlatList,
-  Image,
-  Button,
-} from "react-native";
+import { View, Text, Dimensions, FlatList, Image } from "react-native";
 
 import { observer } from "mobx-react-lite";
 
@@ -15,7 +7,7 @@ import { useStore } from "../store";
 import { styles } from "../components/Movie/Movie.style";
 import { moviesApi } from "../api";
 
-const MovieDetailScreen = observer(({ route, navigation }) => {
+const MovieDetailScreen = observer(({ route }) => {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
 
@@ -29,6 +21,8 @@ const MovieDetailScreen = observer(({ route, navigation }) => {
 
   const fetchGenreTagline = (movieId) => {
     setIsFetching(true);
+
+    console.log(`Movie Store ${JSON.stringify(moviesStore.moviesList)}`);
 
     moviesApi
       .fetchGenTag(movieId)
@@ -54,7 +48,7 @@ const MovieDetailScreen = observer(({ route, navigation }) => {
 
   const renderMovie = ({ item }) => {
     {
-      console.log(item.id);
+      // console.log(item.id);
     }
     return (
       <View
@@ -77,9 +71,7 @@ const MovieDetailScreen = observer(({ route, navigation }) => {
         <View
           style={{
             flexDirection: "row",
-            // flex: 1,
             marginBottom: 30,
-            // justifyContent: "flex-start",
           }}
         >
           <View style={styles.outerCircle}>
